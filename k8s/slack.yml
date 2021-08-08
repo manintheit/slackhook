@@ -1,12 +1,23 @@
 ---
 
 apiVersion: v1
+kind: Namespace
+metadata:
+  labels:
+    kubernetes.io/metadata.name: slack
+  name: slack
+
+
+---
+
+apiVersion: v1
 kind: ConfigMap
 metadata:
   name: slack-cfgm
   namespace: slack
 data:
   slack_url: https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+  # proxy: proxy.squid.local:3128
 
 ---
 
@@ -14,6 +25,7 @@ apiVersion: batch/v1
 kind: CronJob
 metadata:
   name: slack-hook
+  namespace: slack
 spec:
   schedule: "*/5 * * * *"
   jobTemplate:
@@ -29,5 +41,12 @@ spec:
                   configMapKeyRef:
                     name: slack-cfgm
                     key: slack_url
+              #####################################################
+              # - name: PROXY
+              #   valueFrom:
+              #     configMapKeyRef:
+              #       name: slack-cfgm
+              #       key: proxy
+              #####################################################
             imagePullPolicy: IfNotPresent
           restartPolicy: OnFailure
