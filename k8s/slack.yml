@@ -1,0 +1,33 @@
+---
+
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: slack-cfgm
+  namespace: slack
+data:
+  slack_url: https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX
+
+---
+
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: slack-hook
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        spec:
+          containers:
+          - name: slack
+            image: manintheit/slackhook:1.0
+            env:
+              - name: SLACK_URL
+                valueFrom:
+                  configMapKeyRef:
+                    name: slack-cfgm
+                    key: slack_url
+            imagePullPolicy: IfNotPresent
+          restartPolicy: OnFailure
