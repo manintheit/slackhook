@@ -1,6 +1,6 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-function check_utility(){
+function utility_check(){
     local cmd="$1"
     if ! command -v "${cmd}" > /dev/null 2>&1; then
         >&2 echo "'${cmd}' does not exist or not in your PATH..."

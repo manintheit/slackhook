@@ -1,10 +1,16 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
-source ./utility_check.sh
-source ./shuffle.sh  
-source ./slack.sh   
+__dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+#__file="${__dir}/$(basename "${BASH_SOURCE[0]}")"
+#__base="$(basename "${__file}" .sh)"
+#__root="$(cd "$(dirname "${__dir}")" && pwd)"
 
-
+# shellcheck disable=SC1091
+source "${__dir}/utility_check.sh"
+# shellcheck disable=SC1091
+source "${__dir}/shuffle.sh"
+# shellcheck disable=SC1091
+source "${__dir}/slack.sh"
 
 declare -a attendees=() 
 user_emoji=":speaking_head_in_silhouette:"
@@ -39,8 +45,5 @@ printf "%s\n\n" "---------------------------------------------------------------
 
 
 #send_slack_message {Slack webhook url}  {Message} {emoji}
-hook="https://exmaple.com/"
+hook="https://example.com/"
 send_slack_message  "${hook}" "[$(date '+%Y-%m-%d %H:%m %p %Z')] Standup Speakers\n\n ${attendees[*]}" ":loudspeaker:"
-
-
-
